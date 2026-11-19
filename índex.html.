@@ -4,25 +4,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Jogo da Live</title>
+<title>Desafio da Live</title>
 
 <style>
-* {
-  box-sizing: border-box;
-}
-
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #210044, #6900a8);
+  padding: 20px 12px;
+  background: linear-gradient(160deg, #18002e, #7200a8);
   color: white;
+  font-family: Arial, sans-serif;
   text-align: center;
-  padding: 20px;
 }
 
 h1 {
-  color: gold;
-  font-size: 32px;
+  color: #ffd700;
+  font-size: 30px;
+  margin-top: 25px;
 }
 
 p {
@@ -32,45 +29,44 @@ p {
 #numeros {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 9px;
+  gap: 8px;
   max-width: 500px;
   margin: 25px auto;
 }
 
 .numero {
   background: white;
-  color: #57008c;
-  border: none;
+  color: #65009b;
+  border: 2px solid gold;
   border-radius: 10px;
-  padding: 15px 5px;
-  font-size: 20px;
+  padding: 15px 2px;
+  font-size: 19px;
   font-weight: bold;
-  cursor: pointer;
 }
 
 .numero:disabled {
-  background: #333;
+  background: #444;
   color: white;
-  cursor: not-allowed;
+  border-color: #777;
 }
 
 #mensagem {
-  font-size: 24px;
-  font-weight: bold;
   color: gold;
-  min-height: 60px;
-  margin: 20px;
+  font-size: 23px;
+  font-weight: bold;
+  min-height: 65px;
+  margin-top: 20px;
 }
 
-button#reiniciar {
+#reiniciar {
   background: gold;
-  color: #350052;
+  color: #35004d;
+  padding: 15px 30px;
   border: none;
   border-radius: 12px;
-  padding: 15px 30px;
   font-size: 18px;
   font-weight: bold;
-  cursor: pointer;
+  margin-bottom: 30px;
 }
 </style>
 </head>
@@ -79,7 +75,7 @@ button#reiniciar {
 
 <h1>🎁 DESAFIO DA LIVE 🎁</h1>
 <p>Escolha um número de 1 até 100!</p>
-<p>Será que você vai conseguir?</p>
+<p>Será que você consegue? 😍</p>
 
 <div id="numeros"></div>
 
@@ -93,7 +89,7 @@ button#reiniciar {
 const area = document.getElementById("numeros");
 const mensagem = document.getElementById("mensagem");
 
-function criarNumeros() {
+function criarJogo() {
   area.innerHTML = "";
 
   for (let i = 1; i <= 100; i++) {
@@ -102,13 +98,11 @@ function criarNumeros() {
     botao.className = "numero";
     botao.textContent = i;
 
-    botao.onclick = function() {
+    botao.addEventListener("click", function() {
       botao.disabled = true;
       botao.textContent = "❌";
-
       mensagem.textContent = "😅 NÃO FOI DESSA VEZ! TENTE OUTRO!";
-
-    };
+    });
 
     area.appendChild(botao);
   }
@@ -116,10 +110,10 @@ function criarNumeros() {
 
 function reiniciar() {
   mensagem.textContent = "";
-  criarNumeros();
+  criarJogo();
 }
 
-criarNumeros();
+criarJogo();
 </script>
 
 </body>
