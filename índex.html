@@ -1,0 +1,251 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Foi Dessa Vez?</title>
+<style>
+* { box-sizing:border-box; }
+
+body {
+ margin:0;
+ padding:12px;
+ text-align:center;
+ color:white;
+ font-family:Arial,sans-serif;
+ background:linear-gradient(140deg,#150025,#530078,#100020);
+}
+
+h1 {
+ color:#ffdf42;
+ font-size:27px;
+}
+
+#mensagem {
+ background:#ffffff18;
+ border:2px solid #ffcf33;
+ border-radius:16px;
+ padding:17px 8px;
+ margin:15px auto;
+ max-width:600px;
+ font-size:23px;
+ font-weight:bold;
+ min-height:85px;
+}
+
+#grade {
+ display:grid;
+ grid-template-columns:repeat(5,minmax(0,1fr));
+ gap:7px;
+ max-width:650px;
+ margin:18px auto;
+}
+
+.quadro {
+ position:relative;
+ overflow:hidden;
+ background:#ffffff20;
+ border:1px solid #ffffff55;
+ border-radius:12px;
+ min-height:62px;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ font-size:30px;
+ cursor:pointer;
+}
+
+.quadro:active {
+ transform:scale(.94);
+}
+
+.bola {
+ position:absolute;
+ top:-65px;
+ left:50%;
+ transform:translateX(-50%);
+ font-size:35px;
+ z-index:5;
+ animation:cair .65s ease-in forwards;
+ pointer-events:none;
+}
+
+@keyframes cair {
+ 0% {top:-65px;opacity:0}
+ 20% {opacity:1}
+ 100% {top:12px;opacity:1}
+}
+
+.quadro.erro::after {
+ content:"❌";
+ position:absolute;
+ inset:0;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ font-size:32px;
+ background:#80000055;
+ z-index:6;
+}
+
+button {
+ border:0;
+ border-radius:13px;
+ padding:15px 20px;
+ margin:7px;
+ font-size:17px;
+ font-weight:bold;
+ background:#ffcf33;
+ color:#26003e;
+ cursor:pointer;
+}
+
+#resultado {
+ display:none;
+ position:fixed;
+ inset:0;
+ z-index:20;
+ background:#100020ed;
+ align-items:center;
+ justify-content:center;
+ padding:20px;
+}
+
+.caixa {
+ background:linear-gradient(140deg,#570078,#210038);
+ border:3px solid #ffcf33;
+ border-radius:22px;
+ padding:30px 15px;
+ width:100%;
+ max-width:400px;
+ animation:aparecer .35s ease;
+}
+
+@keyframes aparecer {
+ from {transform:scale(.5);opacity:0}
+ to {transform:scale(1);opacity:1}
+}
+
+.caixa h2 {
+ color:#ffdf42;
+ font-size:34px;
+}
+
+.caixa .perda {
+ font-size:25px;
+ color:white;
+ font-weight:bold;
+}
+
+#emojiEscolhido {
+ font-size:75px;
+ margin:15px;
+}
+
+</style>
+</head>
+<body>
+
+<h1>⚽ FOI DESSA VEZ? ⚽</h1>
+<p>Escolha um emoji e veja o resultado!</p>
+
+<div id="mensagem">
+ 👆 ESCOLHA SEU EMOJI!
+</div>
+
+<div id="grade"></div>
+
+<button onclick="reiniciar()">🔄 RECOMEÇAR</button>
+<button onclick="telaCheia()">⛶ TELA CHEIA</button>
+
+<div id="resultado">
+ <div class="caixa">
+  <h2>🎉 FOI DESSA VEZ!</h2>
+  <div id="emojiEscolhido"></div>
+  <div class="perda">
+   ❌ MAS NÃO DEU SORTE!<br><br>
+   VOCÊ PERDEU! 😭
+  </div>
+  <button onclick="reiniciar()">🔄 JOGAR NOVAMENTE</button>
+ </div>
+</div>
+
+<script>
+const emojis = [
+"😀","🥳","😎","😭","🤖","🐶","🦁","🐬","🦋","🦖",
+"🍎","🍕","🍔","🍩","🥑","⚽","🏀","🏆","🎮","🎯",
+"🌻","🌵","🌈","🌙","☀️","🚗","🚀","✈️","🚲","🚂",
+"👑","💎","🎁","🎈","🧸","📱","💻","⌚","📷","🔑",
+"❤️","💜","💚","⭐","🔥","🎵","🎤","🎧","🎸","🥁",
+"🏠","🏰","🏝️","🏖️","🌋","⛄","🌊","🌳","🍄","🌷",
+"⚡","☂️","❄️","☔","🌪️","🧪","🔬","🔭","🧲","💡",
+"👻","👽","💀","🧙","🧛","🦄","🐉","🦜","🦩","🐙",
+"🍰","🍿","🍦","🥨","🌮","🥤","☕","🍉","🍋","🥐",
+"🎲","🧩","🎨","🎹","🎻","🏹","🥊","🏓","🏸","🛹"
+];
+
+let escolhido = false;
+
+function mostrar() {
+ const grade = document.getElementById("grade");
+ grade.innerHTML = "";
+
+ emojis.forEach((emoji,i) => {
+  const quadro = document.createElement("div");
+  quadro.className = "quadro";
+  quadro.textContent = emoji;
+
+  quadro.onclick = () => selecionar(quadro,emoji);
+
+  grade.appendChild(quadro);
+ });
+}
+
+function selecionar(quadro,emoji) {
+ if(escolhido) return;
+ escolhido = true;
+
+ const bola = document.createElement("span");
+ bola.className = "bola";
+ bola.textContent = "⚽";
+ quadro.appendChild(bola);
+
+ document.getElementById("mensagem").innerHTML =
+ "⚽ A BOLA ESTÁ CAINDO...";
+
+ setTimeout(() => {
+  quadro.classList.add("erro");
+
+  document.getElementById("emojiEscolhido").textContent = emoji;
+
+  document.getElementById("mensagem").innerHTML =
+  "❌ NÃO DEU SORTE!";
+
+  document.getElementById("resultado").style.display = "flex";
+ },750);
+}
+
+function reiniciar() {
+ escolhido = false;
+
+ document.getElementById("resultado").style.display = "none";
+ document.getElementById("mensagem").innerHTML =
+ "👆 ESCOLHA SEU EMOJI!";
+
+ mostrar();
+}
+
+function telaCheia() {
+ if(!document.fullscreenElement) {
+  document.documentElement.requestFullscreen?.();
+ } else {
+  document.exitFullscreen?.();
+ }
+}
+
+mostrar();
+</script>
+
+</body>
+</html>
