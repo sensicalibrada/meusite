@@ -7,66 +7,70 @@
 <title>Desafio da Live</title>
 
 <style>
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   padding: 20px 12px;
-  background: linear-gradient(160deg, #18002e, #7200a8);
+  background: #260044;
   color: white;
   font-family: Arial, sans-serif;
   text-align: center;
 }
 
 h1 {
-  color: #ffd700;
-  font-size: 30px;
-  margin-top: 25px;
+  color: gold;
+  font-size: 28px;
 }
 
 p {
   font-size: 18px;
 }
 
-#numeros {
+#grade {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 8px;
-  max-width: 500px;
+  max-width: 450px;
   margin: 25px auto;
 }
 
 .numero {
-  background: white;
-  color: #65009b;
+  padding: 15px 2px;
   border: 2px solid gold;
   border-radius: 10px;
-  padding: 15px 2px;
-  font-size: 19px;
+  background: white;
+  color: #260044;
+  font-size: 20px;
   font-weight: bold;
+  cursor: pointer;
 }
 
 .numero:disabled {
-  background: #444;
+  background: #555;
   color: white;
   border-color: #777;
 }
 
 #mensagem {
-  color: gold;
-  font-size: 23px;
-  font-weight: bold;
   min-height: 65px;
-  margin-top: 20px;
+  margin: 20px 0;
+  color: gold;
+  font-size: 22px;
+  font-weight: bold;
 }
 
 #reiniciar {
-  background: gold;
-  color: #35004d;
-  padding: 15px 30px;
+  padding: 15px 25px;
   border: none;
   border-radius: 12px;
+  background: gold;
+  color: #260044;
   font-size: 18px;
   font-weight: bold;
-  margin-bottom: 30px;
+  cursor: pointer;
 }
 </style>
 </head>
@@ -74,46 +78,45 @@ p {
 <body>
 
 <h1>🎁 DESAFIO DA LIVE 🎁</h1>
-<p>Escolha um número de 1 até 100!</p>
-<p>Será que você consegue? 😍</p>
 
-<div id="numeros"></div>
+<p>Escolha seu número de 1 até 100!</p>
+<p>Boa sorte! 🍀</p>
+
+<div id="grade"></div>
 
 <div id="mensagem"></div>
 
-<button id="reiniciar" onclick="reiniciar()">
-🔄 RECOMEÇAR
+<button id="reiniciar" onclick="iniciarJogo()">
+RECOMEÇAR 🔄
 </button>
 
 <script>
-const area = document.getElementById("numeros");
-const mensagem = document.getElementById("mensagem");
+function iniciarJogo() {
+  var grade = document.getElementById("grade");
+  var mensagem = document.getElementById("mensagem");
 
-function criarJogo() {
-  area.innerHTML = "";
+  grade.innerHTML = "";
+  mensagem.innerHTML = "";
 
-  for (let i = 1; i <= 100; i++) {
-    const botao = document.createElement("button");
+  for (var i = 1; i <= 100; i++) {
+    var botao = document.createElement("button");
 
     botao.className = "numero";
-    botao.textContent = i;
+    botao.innerHTML = i;
 
-    botao.addEventListener("click", function() {
-      botao.disabled = true;
-      botao.textContent = "❌";
-      mensagem.textContent = "😅 NÃO FOI DESSA VEZ! TENTE OUTRO!";
-    });
+    botao.onclick = function() {
+      this.disabled = true;
+      this.innerHTML = "❌";
 
-    area.appendChild(botao);
+      mensagem.innerHTML =
+        "😅 NÃO FOI DESSA VEZ! TENTE OUTRO!";
+    };
+
+    grade.appendChild(botao);
   }
 }
 
-function reiniciar() {
-  mensagem.textContent = "";
-  criarJogo();
-}
-
-criarJogo();
+iniciarJogo();
 </script>
 
 </body>
